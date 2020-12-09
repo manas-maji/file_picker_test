@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,6 +10,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   File file;
+  String text = "No file selected yet!";
 
   @override
   void initState() {
@@ -34,9 +36,7 @@ class _HomePageState extends State<HomePage> {
               Container(
                 height: 250,
                 width: 250,
-                child: file == null
-                    ? Center(child: Text("No file picked yet!"))
-                    : Image.file(file),
+                child: file == null ? Center(child: Text(text)) : Image.file(file),
               )
             ],
           ),
@@ -46,19 +46,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _handleFilePicked() async {
-    // FilePickerResult result = await FilePicker.platform.pickFiles(
-    //   type: FileType.custom,
-    //   allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
-    // );
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
+    );
     // // String result = await FilePicker().pickFiles();
     //
-    // if (result != null) {
-    //   File file = File(result.files.single.path);
-    //   print('File path => ${file.path}');
-    //
-    //   // print(result);
-    // } else {
-    //   print('No file selected');
-    // }
+    if (result != null) {
+      PlatformFile platformFile = result.files.first;
+      // if (platformFile.extension == "png" ||
+      //     platformFile.extension == "jpg" ||
+      //     platformFile.extension == "jpeg") {
+      //   setState(() {
+      //     file = File(platformFile.path);
+      //   });
+      // } else if (platformFile.extension == "pdf") {
+      //   setState(() {
+      //     text = "PDF file selected";
+      //   });
+      // }
+      print('File path => ${platformFile.path}');
+      print('File extension => ${platformFile.extension}');
+    } else {
+      print('Result null');
+    }
   }
 }
